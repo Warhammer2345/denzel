@@ -2,7 +2,7 @@
 const imdb = require('./src/imdb');
 const DENZEL_IMDB_ID = 'nm0000243';
 
-async function sandbox (actor) {
+async function test (actor) {
   try {
     console.log(`📽️  fetching filmography of ${actor}...`);
     const movies = await imdb(actor);
@@ -19,4 +19,4 @@ async function sandbox (actor) {
   }
 }
 
-sandbox(DENZEL_IMDB_ID);
+test(DENZEL_IMDB_ID);
