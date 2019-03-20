@@ -1,0 +1,63 @@
+const {ASYNC_MAX_RETRY} = require('./constants');
+const {makeExecutableSchema} = require('graphql-tools');
+const retry = require('async-retry');
+
+const typeDefs = [`
+    type Query {
+    movies: [Movie]
+    movie: Movie
+  }
+  
+  type Movie {
+    link: String
+    metascore: Int
+    synopsis: String
+    title: String
+    year: Int
+  }
+  schema {
+    query: Query
+  }`
+];
+
+const resolvers = {
+  'Query': {
+    'count': async (obj, args, context) => {
+      const {collection} = context;
+
+      return await retry(async () => {
+        return await collection.countDocuments();
+      }, {'retries': ASYNC_MAX_RETRY});
+    },
+    'issues': async (obj, args, context) => {
+      const {collection} = context;
+
+      return await retry(async () => {
+        return await collection.find().toArray();
+      }, {'retries': ASYNC_MAX_RETRY});
+    },
+    'random': async (obj, args, context) => {
+      const {collection} = context;
+      const {year = (new Date()).getFullYear()} = args;
+
+      return await retry(async () => {
+        const cursor = await collection.aggregate([{'$match': {year}}, {'$sample': {'size': 1}}]);
+        const docs = await cursor.toArray();
+
+        return docs[0];
+      }, {'retries': ASYNC_MAX_RETRY});
+    },
+    'years': async (obj, args, context) => {
+      const {collection} = context;
+
+      return await retry(async () => {
+        return await collection.distinct('year');
+      }, {'retries': ASYNC_MAX_RETRY});
+    }
+  }
+};
+
+module.exports = makeExecutableSchema({
+  typeDefs,
+  resolvers
+});

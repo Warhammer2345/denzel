@@ -83,7 +83,7 @@ app.post("/Chargement", (request, response) => {
 
 app.get("/movies", (request, response) => {
     response.setHeader("Content-Type", "application/json; charset=utf-8");
-    collection.aggregate([{$match :{ metascore: { $gte: 77 }} },{$sample : {size : 1}}]).toArray(function(error, result) {
+    collection.aggregate([{$match :{ metascore: { $gte: 70 }} },{$sample : {size : 1}}]).toArray(function(error, result) {
         if(error) {
             return response.status(500).send(error);
         }
@@ -112,17 +112,57 @@ app.get('/search', (request, response) => {
     var limit=5;
     var _metascore=0;
     console.log(_metascore);
+    console.log(limit);
     if( typeof request.query.limit != 'undefined' ){
       limit=request.query.limit
     }
+    console.log(limit);
     if( typeof request.query.metascore != 'undefined' ){
         _metascore=request.query.metascore;
     }
     console.log(_metascore);
-      collection.aggregate([{$match :{  metascore: { $gte: _metascore }} },{$sample : {size : limit}}]).toArray(function(error, result) {
+      collection.aggregate([{$match :{  metascore: { $gte: parseInt(_metascore,10)  }} },{$sample : {size : parseInt(limit,10) }}]).toArray(function(error, result) {
         if(error) {
             return response.status(500).send(error);
         }
         response.send(JSON.stringify(result, null, 2));
     });
   });
+
+  app.post('/movies/:id', (request, response) => {
+    //response.send('POST request to the homepage');
+    /*collection.aggregate([{$match :{ id : request.params.id }},{$sample : {size : 1}}]).toArray(function(error, result) {
+        if(error) {
+            return response.status(500).send(error);
+        }
+        response.send(JSON.stringify(result, null, 2));
+    });*/
+    console.log(request.body.date);
+    collection.update({id : request.params.id},{$set : {"reviews" : request.body.review , "date":request.body.date}}, function(err, result) {
+        if(err){
+            console.log(err)
+            throw err;
+        }
+        console.log(result[0]);
+        response.send(JSON.stringify(result, null, 2));
+    });
+    
+});
+
+/*app.post("/person", (request, response) => {
+    collection.insert(request.body, (error, result) => {
+        if(error) {
+            return response.status(500).send(error);
+        }
+        response.send(result.result);
+    });
+});
+
+curl -X POST \
+    -H 'content-type:application/json' \
+    -d '{"firstname":"Maria","lastname":"Raboy"}' \
+    http://localhost:3000/person
+
+curl -X POST -H 'content-type: application/json' -d {"date": "2019-03-04", "review": "Great"}  http://localhost:3000/movies/tt0328107 {
+  "_id": "507f191e810c19729de860ea"
+}*/
