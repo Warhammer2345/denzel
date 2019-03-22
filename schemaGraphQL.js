@@ -54,6 +54,19 @@ const resolvers = {
         });  
         //return await collection.aggregate([{$match :{ metascore: { $gte: 70 }} },{$sample : {size : 1}}]);
       }, {'retries': ASYNC_MAX_RETRY});
+    },
+    'Searchmovie': async (obj, args, context) => {
+      
+      const {collection} = context;
+      const {id} = args;
+      console.log(id);
+      return await retry(async () => {
+        const cursor = await collection.aggregate([{$match :{ id : id }},{$sample : {size : 1}}]);
+        const docs = await cursor.toArray();
+        console.log(docs[0]);
+        return docs[0];
+        //return await collection.aggregate([{$match :{ metascore: { $gte: 70 }} },{$sample : {size : 1}}]);
+      }, {'retries': ASYNC_MAX_RETRY});
     }
   }
 };
