@@ -8,8 +8,8 @@ const typeDefs = [`
     movie: Movie
     Searchmovie(id : String!): Movie
     SearchMovies(limit : Int, metascore : Int): [Movie]
+    AddMovies(id : String!, review : String, Date : String!) : Movie
     populate : Int
-    AddMovies(int : Int, review : String, Date : String) : Movie
   }
   
   type Movie {
@@ -85,6 +85,24 @@ const resolvers = {
         console.log(docs);
         return docs;
         //return await collection.aggregate([{$match :{ metascore: { $gte: 70 }} },{$sample : {size : 1}}]);
+      }, {'retries': ASYNC_MAX_RETRY});
+    },
+    'AddMovies': async (obj, args, context) => {
+      
+      const {collection} = context;
+      var review = args.review;
+      var id = args.id;
+      var date = args.Date;
+      if(args.review==null)
+        review ="No comment";
+      console.log(args.Date);
+      collection.update({id : id},{$set : {"reviews" : review , "date":date}});
+      return await retry(async () => {
+        const cursor = await collection.aggregate([{$match :{ id : id }},{$sample : {size : 1}}]);
+        const docs = await cursor.toArray();
+        console.log(docs[0]);
+        return docs[0];
+         
       }, {'retries': ASYNC_MAX_RETRY});
     }
   }

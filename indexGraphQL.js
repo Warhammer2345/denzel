@@ -11,8 +11,7 @@ const schema = require('./schemaGraphQL');
 const app = express();
 const CONNECTION_URL = "mongodb+srv://Warhammer2345:Azerty1997@seb-cluster-d7cto.mongodb.net/test?retryWrites=true";
 const DATABASE_NAME = "Seb-Cluster";
-const imdb = require('./src/imdb');
-const DENZEL_IMDB_ID = 'nm0000243';
+
 
    
 MongoClient.connect(CONNECTION_URL, { useNewUrlParser: true }, (error, client) => {
