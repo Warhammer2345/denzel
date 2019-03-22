@@ -143,7 +143,6 @@ app.get('/search', (request, response) => {
             console.log(err)
             throw err;
         }
-        console.log(result[0]);
         response.send(JSON.stringify(result, null, 2));
     });
     
