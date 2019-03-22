@@ -1,6 +1,8 @@
 ﻿# DENZEL
-J'ai décidé pour se projet de séparer la partie REST de la partie nodeJS. 
-En effet, le serveur Relais&Chateaux ne fonctionnant pas parfaitement dans 100% des cas, cela permet de pouvoir utiliser la partie REST sans prendre le risque que cela ne fonctionne pas.
+Toutes les requêtes fonctionnent. Cependant, il y a 2 choses que j'ai fait différemment.
+D'abord, le post de la partie Rest ne fonctionne pas dans la console mais fonctionne sur Insomnia.
+Ensuite, la requête search de la partie Rest s'écrit sans le /movies, il ne reconnaissait pas la requête sinon.
+
 > The must-watch Denzel's movies
 
 ![denzel](https://m.media-amazon.com/images/M/MV5BMjE5NDU2Mzc3MV5BMl5BanBnXkFtZTcwNjAwNTE5OQ@@._V1_SY1000_SX750_AL_.jpg)
