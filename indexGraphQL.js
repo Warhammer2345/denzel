@@ -20,7 +20,7 @@ MongoClient.connect(CONNECTION_URL, { useNewUrlParser: true }, (error, client) =
         throw error;
     }
     database = client.db(DATABASE_NAME);
-    collection = database.collection("movies");
+    collection = database.collection("moviesGraphQL");
     console.log("Connected to `" + DATABASE_NAME + "`!");
 
     app.use('/graphql', graphqlHTTP({
