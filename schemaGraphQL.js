@@ -6,9 +6,10 @@ const DENZEL_IMDB_ID = 'nm0000243';
 const typeDefs = [`
     type Query {
     movie: Movie
-    Searchmovie(id : String): Movie
+    Searchmovie(id : String!): Movie
     SearchMovies(limit : Int, metascore : Int): [Movie]
     populate : Int
+    AddMovies(int : Int, review : String, Date : String) : Movie
   }
   
   type Movie {
